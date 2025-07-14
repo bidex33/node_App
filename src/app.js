@@ -28,7 +28,9 @@ console.error(`an error occured:${err.message}`)
 });
 console.log('uri:', process.env.MONGO_URI)
 app.use('/api', contactRoutes, userRoutes)
-// app.get('/', getHome)
+app.get('/', (req, res) => {
+    res.send('Welcome ')
+})
 
 
 if(process.env.NODE_ENV !== 'production'){
