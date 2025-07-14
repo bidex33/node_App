@@ -1,0 +1,82 @@
+
+const Contact = require('../models/contactSchema')
+const contactValidator = require('../validators/contactValidator')
+
+const getHome = (req, res)=>{
+    res.send("hello guys")
+
+}
+
+const newContact =async (req, res)=>{
+
+try{
+
+const {name, email, phoneNumber}= req.body
+
+const { error } =contactValidator.validate({name, email, phoneNumber})
+
+if(error){
+    res.status(400).json({error: error.details[0]})
+}
+
+if(name !== "" && email !== "" ){
+const  contact = await Contact.create({
+    name,
+    email,
+    phoneNumber
+})
+res.status(201).json({message: "contact created successfully", contact})
+}else{
+    res.status(400).json({message: "Name and email are required"})
+}
+}catch(err){
+    console.error(err)
+    res.status(500).json({message: "Internal server erpor"})
+}
+}
+
+const getContacts = async(req, res)=>{
+const contacts = await Contact.find()
+res.status(200).json({contacts})
+}
+
+const getSingle = async(req, res)=>{
+try{
+    const {id}= req.params
+    const contact = await Contact.findById(id)
+    if(!contact){
+        return res.status(404).json({message: "contact not found"})
+    }else{res.status(200).json({contact})}
+    
+
+}catch(err){
+console.error(err.message)
+res.status(500).json({message: "Internal server error"})
+}
+}
+
+const deleteSingle = async (req, res)=>{
+
+try{
+ const {id} = req.params
+   const contact = await Contact.findByIdAndDelete(id)
+   if
+(!contact){
+    return res.status(404).json({message: "contact not found"})
+}
+else
+{res.status(200).json({message: "contact deleted successfully!!"})}
+}catch(err){
+console.error(err.message)
+res.status(500).json({message: " Internal server error"})
+}
+
+}
+
+    
+   
+  
+
+
+
+module.exports = {getHome, newContact, getContacts, getSingle, deleteSingle}
