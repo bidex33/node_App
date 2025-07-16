@@ -16,7 +16,7 @@ app.use(function(req, res, next) {
         "Origin-x-requested-with, Content-Type,Accept, Authorization;"
     )
     next()
-})
+});
 
 app.use(express.json())
 app.use(express.urlencoded({extended: true}));
@@ -27,7 +27,9 @@ mongoose.connect(process.env.MONGO_URI).then(()=>{
 console.error(`an error occured:${err.message}`)
 });
 console.log('uri:', process.env.MONGO_URI)
-app.use('/api', contactRoutes, userRoutes)
+app.use('/api', userRoutes)
+app.use('/api', contactRoutes)
+
 app.get('/', (req, res) => {
     res.send('Welcome ')
 })
